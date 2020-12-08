@@ -38,5 +38,5 @@ testem.log
 .DS_Store
 Thumbs.db
 ngrok.yml
-apps/nestjs-dev-server/src/environments/environment.ts
+
 
