@@ -59,7 +59,8 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "gui:build"
+            "browserTarget": "gui:build",
+            "proxyConfig": "apps/gui/proxy.conf.json"
           },
           "configurations": {
             "production": {
@@ -151,6 +152,60 @@
             "packageJson": "libs/nestjs/package.json",
             "main": "libs/nestjs/src/index.ts",
             "assets": ["libs/nestjs/*.md"]
+          }
+        }
+      }
+    },
+    "nestjs-dev-server": {
+      "root": "apps/nestjs-dev-server",
+      "sourceRoot": "apps/nestjs-dev-server/src",
+      "projectType": "application",
+      "prefix": "nestjs-dev-server",
+      "schematics": {},
+      "architect": {
+        "build": {
+          "builder": "@nrwl/node:build",
+          "options": {
+            "outputPath": "dist/apps/nestjs-dev-server",
+            "main": "apps/nestjs-dev-server/src/main.ts",
+            "tsConfig": "apps/nestjs-dev-server/tsconfig.app.json",
+            "assets": ["apps/nestjs-dev-server/src/assets"]
+          },
+          "configurations": {
+            "production": {
+              "optimization": true,
+              "extractLicenses": true,
+              "inspect": false,
+              "fileReplacements": [
+                {
+                  "replace": "apps/nestjs-dev-server/src/environments/environment.ts",
+                  "with": "apps/nestjs-dev-server/src/environments/environment.prod.ts"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "builder": "@nrwl/node:execute",
+          "options": {
+            "buildTarget": "nestjs-dev-server:build"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "apps/nestjs-dev-server/tsconfig.app.json",
+              "apps/nestjs-dev-server/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!apps/nestjs-dev-server/**/*"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "apps/nestjs-dev-server/jest.config.js",
+            "passWithNoTests": true
           }
         }
       }
