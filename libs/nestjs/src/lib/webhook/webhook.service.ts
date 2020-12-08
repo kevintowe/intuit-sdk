@@ -1,16 +1,14 @@
 import { Inject, Injectable } from '@nestjs/common';
-import * as admin from 'firebase-admin';
-import { IntuitApiClientService } from '../api-client/api-client.service';
-import { IntuitWebhookNotification } from '../intuit-types';
-import { databaseName, prepEntityName } from '../util';
-import { IntuitWebhookController } from './webhook.controller';
+
+import { IntuitApiClientService } from '../api-client';
+import { IntuitPersistence, IntuitWebhookNotification } from '../types';
+import { databaseName, prepEntityName } from '../utils';
 
 @Injectable()
-export class WebhookService {
+export class IntuitWebhookService {
   constructor(
-    @Inject('IntuitApiClient') private apiClient: any,
-    @Inject('Firestore') private firestore: admin.firestore.Firestore,
-    private apiClientService: IntuitApiClientService
+    private apiClient: IntuitApiClientService,
+    @Inject('IntuitPersistence') private persistence: IntuitPersistence
   ) {}
 
   async handleWebhookNotification(notification: IntuitWebhookNotification) {
@@ -46,14 +44,16 @@ export class WebhookService {
   }
 
   private async create(notification: IntuitWebhookNotification) {
-    await this.ref(notification).set(
-      await this.apiClientService.read(notification.name, notification.id)
+    await this.persistence.create<any>(
+      prepEntityName(databaseName(notification.name)),
+      await this.apiClient.read(notification.name, notification.id)
     );
   }
 
   private async update(notification: IntuitWebhookNotification) {
-    await this.ref(notification).set(
-      await this.apiClientService.read(notification.name, notification.id)
+    await this.persistence.update<any>(
+      prepEntityName(databaseName(notification.name)),
+      await this.apiClient.read(notification.name, notification.id)
     );
   }
 
@@ -64,10 +64,4 @@ export class WebhookService {
   private async merge(notification: IntuitWebhookNotification) {}
 
   private async emailed(notification: IntuitWebhookNotification) {}
-
-  private ref(notification: IntuitWebhookNotification) {
-    return this.firestore.doc(
-      `${prepEntityName(databaseName(notification.name))}/${notification.id}`
-    );
-  }
 }

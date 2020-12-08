@@ -33,7 +33,13 @@
     "nestjs": {
       "tags": []
     },
-    "nestjs-dev-server": {
+    "database-server": {
+      "tags": []
+    },
+    "nest-server": {
+      "tags": []
+    },
+    "nest": {
       "tags": []
     }
   }

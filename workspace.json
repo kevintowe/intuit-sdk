@@ -156,20 +156,20 @@
         }
       }
     },
-    "nestjs-dev-server": {
-      "root": "apps/nestjs-dev-server",
-      "sourceRoot": "apps/nestjs-dev-server/src",
+    "database-server": {
+      "root": "apps/database-server",
+      "sourceRoot": "apps/database-server/src",
       "projectType": "application",
-      "prefix": "nestjs-dev-server",
+      "prefix": "database-server",
       "schematics": {},
       "architect": {
         "build": {
           "builder": "@nrwl/node:build",
           "options": {
-            "outputPath": "dist/apps/nestjs-dev-server",
-            "main": "apps/nestjs-dev-server/src/main.ts",
-            "tsConfig": "apps/nestjs-dev-server/tsconfig.app.json",
-            "assets": ["apps/nestjs-dev-server/src/assets"]
+            "outputPath": "dist/apps/database-server",
+            "main": "apps/database-server/src/main.ts",
+            "tsConfig": "apps/database-server/tsconfig.app.json",
+            "assets": ["apps/database-server/src/assets"]
           },
           "configurations": {
             "production": {
@@ -178,8 +178,8 @@
               "inspect": false,
               "fileReplacements": [
                 {
-                  "replace": "apps/nestjs-dev-server/src/environments/environment.ts",
-                  "with": "apps/nestjs-dev-server/src/environments/environment.prod.ts"
+                  "replace": "apps/database-server/src/environments/environment.ts",
+                  "with": "apps/database-server/src/environments/environment.prod.ts"
                 }
               ]
             }
@@ -188,24 +188,113 @@
         "serve": {
           "builder": "@nrwl/node:execute",
           "options": {
-            "buildTarget": "nestjs-dev-server:build"
+            "buildTarget": "database-server:build"
           }
         },
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": [
-              "apps/nestjs-dev-server/tsconfig.app.json",
-              "apps/nestjs-dev-server/tsconfig.spec.json"
+              "apps/database-server/tsconfig.app.json",
+              "apps/database-server/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!apps/nestjs-dev-server/**/*"]
+            "exclude": ["**/node_modules/**", "!apps/database-server/**/*"]
           }
         },
         "test": {
           "builder": "@nrwl/jest:jest",
           "options": {
-            "jestConfig": "apps/nestjs-dev-server/jest.config.js",
+            "jestConfig": "apps/database-server/jest.config.js",
             "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "nest-server": {
+      "root": "apps/nest-server",
+      "sourceRoot": "apps/nest-server/src",
+      "projectType": "application",
+      "prefix": "nest-server",
+      "schematics": {},
+      "architect": {
+        "build": {
+          "builder": "@nrwl/node:build",
+          "options": {
+            "outputPath": "dist/apps/nest-server",
+            "main": "apps/nest-server/src/main.ts",
+            "tsConfig": "apps/nest-server/tsconfig.app.json",
+            "assets": ["apps/nest-server/src/assets"]
+          },
+          "configurations": {
+            "production": {
+              "optimization": true,
+              "extractLicenses": true,
+              "inspect": false,
+              "fileReplacements": [
+                {
+                  "replace": "apps/nest-server/src/environments/environment.ts",
+                  "with": "apps/nest-server/src/environments/environment.prod.ts"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "builder": "@nrwl/node:execute",
+          "options": {
+            "buildTarget": "nest-server:build"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "apps/nest-server/tsconfig.app.json",
+              "apps/nest-server/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!apps/nest-server/**/*"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "apps/nest-server/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "nest": {
+      "root": "libs/nest",
+      "sourceRoot": "libs/nest/src",
+      "projectType": "library",
+      "schematics": {},
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/nest/tsconfig.lib.json",
+              "libs/nest/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!libs/nest/**/*"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/nest/jest.config.js",
+            "passWithNoTests": true
+          }
+        },
+        "build": {
+          "builder": "@nrwl/node:package",
+          "options": {
+            "outputPath": "dist/libs/nest",
+            "tsConfig": "libs/nest/tsconfig.lib.json",
+            "packageJson": "libs/nest/package.json",
+            "main": "libs/nest/src/index.ts",
+            "assets": ["libs/nest/*.md"]
           }
         }
       }

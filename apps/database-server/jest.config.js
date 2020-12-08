@@ -1,5 +1,5 @@
 module.exports = {
-  displayName: 'nestjs-dev-server',
+  displayName: 'database-server',
   preset: '../../jest.preset.js',
   globals: {
     'ts-jest': {
@@ -10,5 +10,5 @@ module.exports = {
     '^.+\\.[tj]s$': 'ts-jest',
   },
   moduleFileExtensions: ['ts', 'js', 'html'],
-  coverageDirectory: '../../coverage/apps/nestjs-dev-server',
+  coverageDirectory: '../../coverage/apps/database-server',
 };

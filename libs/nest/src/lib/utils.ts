@@ -1,4 +1,4 @@
-import { OAuthToken, WebhookEntities } from './types';
+import { OAuthToken } from './types';
 
 /**
  * Returns a formatted oauth token

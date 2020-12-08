@@ -16,7 +16,8 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@intuit-sdk/nestjs": ["libs/nestjs/src/index.ts"]
+      "@intuit-sdk/nestjs": ["libs/nestjs/src/index.ts"],
+      "@intuit-sdk/nest": ["libs/nest/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

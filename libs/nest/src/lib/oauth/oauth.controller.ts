@@ -1,15 +1,16 @@
 import { Controller, Get, Inject, Res, Req } from '@nestjs/common';
-import { Response } from 'express';
-import { buildToken } from '../utils';
+import { Response, Request } from 'express';
 const OAuthClient = require('intuit-oauth');
-import { IntuitTokenService } from './token.service';
+
+import { IntuitConfig, IntuitPersistence } from '../types';
+import { buildToken } from '../utils';
 
 @Controller('intuit/oauth')
 export class IntuitOAuthController {
   constructor(
     @Inject('IntuitOAuthClient') private oauthClient: any,
-    @Inject('IntuitApiClient') private apiClient: any,
-    private tokenService: IntuitTokenService
+    @Inject('IntuitPersistence') private intuitPersistence: IntuitPersistence,
+    @Inject('IntuitConfig') private config: IntuitConfig // @Inject('NodeQuickbooks') private nodeQuickbooks: any
   ) {}
 
   @Get('authorize')
@@ -31,12 +32,13 @@ export class IntuitOAuthController {
         .createToken(parseRedirect)
         .then(async (authResponse: any) => {
           const token = buildToken(authResponse);
-          this.apiClient.token = token.access_token;
-          this.apiClient.realmId = token.realmId;
-          this.apiClient.refreshToken = token.refresh_token;
+
+          // this.nodeQuickbooks.token = token.access_token;
+          // this.nodeQuickbooks.realmId = token.realmId;
+          // this.nodeQuickbooks.refreshToken = token.refresh_token;
           try {
-            await this.tokenService.persistToken(token);
-            res.redirect('https://google.com');
+            await this.intuitPersistence.saveToken(token);
+            res.redirect(this.config.frontEndRedirectUri);
           } catch (err) {}
         });
     } catch (err) {
