@@ -1,3 +1,3 @@
 module.exports = {
-  projects: ['<rootDir>/apps/gui'],
+  projects: ['<rootDir>/apps/gui', '<rootDir>/libs/nestjs'],
 };
