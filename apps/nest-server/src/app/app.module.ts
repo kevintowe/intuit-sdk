@@ -1,4 +1,4 @@
-import { Injectable, Module } from '@nestjs/common';
+import { Global, Injectable, Module } from '@nestjs/common';
 import * as http from 'http';
 
 import { AppController } from './app.controller';
@@ -11,7 +11,6 @@ import {
   OAuthToken,
 } from '@intuit-sdk/nest';
 import { environment } from '../environments/environment';
-import { runInNewContext } from 'vm';
 
 const config: IntuitConfig = {
   clientId: environment.clientId,
@@ -85,14 +84,18 @@ class IntuitPersistenceService implements IntuitPersistence {
   async update<T>(entityName: string, entity: T) {}
 }
 
+// @Global()
+// @Module({providers: []})
+// class SharedModule {}
+
 @Module({
   imports: [IntuitNestModule.register(config, IntuitPersistenceService)],
-  controllers: [AppController],
+  controllers: [],
   providers: [
-    AppService,
+    IntuitPersistenceService,
     {
       provide: 'DatabaseConfig',
-      useValue: { host: 'localhost.com', port: '2000' },
+      useValue: { host: 'localhost', port: '2000' },
     },
   ],
 })

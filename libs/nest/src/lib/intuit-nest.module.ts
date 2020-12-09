@@ -24,12 +24,14 @@ import { IntuitOAuthClient, NodeQuickbooksClient } from './tokens';
 const intuitOAuthProvider: Provider = {
   provide: IntuitOAuthClient,
   useFactory: (config: IntuitConfig) => {
-    return new OAuthClient({
+    const _client = new OAuthClient({
       clientId: config.clientId,
       clientSecret: config.clientSecret,
       environment: config.environment,
       redirectUri: config.redirectUri,
     });
+    // console.log(_client);
+    return _client;
   },
   inject: ['IntuitConfig'],
 };
@@ -42,22 +44,10 @@ const nodeQuickbooksProvider: Provider = {
     tokenService: IntuitTokenService,
     config: IntuitConfig
   ) => {
-    const token = await tokenService.fetchToken();
-
-    if (!token) {
-      return new NodeQuickbooks(
-        config.clientId,
-        config.clientSecret,
-        null,
-        false, // no token secret for oauth2.0
-        null,
-        config.environment === 'sandbox' ? true : false,
-        false, // enable debugging
-        null,
-        '2.0',
-        null
-      );
-    } else {
+    console.log('Do we even run');
+    try {
+      const token = await tokenService.fetchToken();
+      console.log(`The token is: ${token}`);
       return new NodeQuickbooks(
         config.clientId,
         config.clientSecret,
@@ -69,6 +59,20 @@ const nodeQuickbooksProvider: Provider = {
         null,
         '2.0',
         token.refresh_token || null
+      );
+    } catch (err) {
+      console.log(`The error is: ${err}`);
+      return new NodeQuickbooks(
+        config.clientId,
+        config.clientSecret,
+        null,
+        false, // no token secret for oauth2.0
+        null,
+        config.environment === 'sandbox' ? true : false,
+        false, // enable debugging
+        null,
+        '2.0',
+        null
       );
     }
   },

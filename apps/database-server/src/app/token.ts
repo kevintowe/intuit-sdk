@@ -2,6 +2,7 @@ import * as fs from 'fs';
 import { OAuthToken } from '@intuit-sdk/nest';
 
 export function getToken() {
+  // return null;
   try {
     if (fs.existsSync('./oauthToken.json')) {
       const rawData = fs.readFileSync('./oauthToken.json');

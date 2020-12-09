@@ -2,16 +2,13 @@ import { Inject, Injectable } from '@nestjs/common';
 
 import { IntuitPersistence, OAuthToken } from '../types';
 import { buildToken } from '../utils';
-import { IntuitOAuthClient } from '../tokens';
-
-@Injectable()
-export class TestService {}
+import { IntuitOAuthClient, NodeQuickbooksClient } from '../tokens';
 
 @Injectable()
 export class IntuitTokenService {
   constructor(
     @Inject('IntuitPersistence') private persistence: IntuitPersistence,
-    @Inject(IntuitOAuthClient) private oauthClient: any
+    @Inject(IntuitOAuthClient) private oauthClient: any // @Inject(NodeQuickbooksClient) private nodeQuickbooks: any
   ) {}
 
   /**
@@ -21,7 +18,7 @@ export class IntuitTokenService {
     console.log('About to fetch the token');
     try {
       const token = await this.persistence.getToken();
-      console.log(token);
+      console.log(`The token is ${token}`);
       if (!token) return null;
 
       this.oauthClient.setToken(token);
@@ -39,14 +36,19 @@ export class IntuitTokenService {
    * refresh -> persist --> and then return the new token.
    */
   private async refreshToken(oldToken: OAuthToken) {
-    this.oauthClient.setToken(oldToken);
+    console.log('About to refresh the token');
     return this.oauthClient
       .refreshUsingToken(oldToken.refresh_token)
       .then(async (authResponse: any) => {
         const newToken = buildToken(authResponse);
-        this.oauthClient.setToken(newToken);
+        // this.oauthClient.setToken(newToken);
+        // this.nodeQuickbooks.token = newToken.access_token;
+        // this.nodeQuickbooks.realmId = newToken.realmId;
+        // this.nodeQuickbooks.refreshToken = newToken.refresh_token;
         try {
           await this.persistence.saveToken(newToken);
+          console.log('Token successfully refreshed');
+
           return newToken;
         } catch (err) {
           console.log(err);
