@@ -17,7 +17,11 @@ $ npm i @intuit-sdk/nestjs
 ```typescript
 import { Module } from '@nestjs/common';
 
-import { IntuitNestModule } from '@intuit-sdk/nest';
+import {
+  IntuitNestModule,
+  IntuitConfig,
+  IntuitPersistence,
+} from '@intuit-sdk/nest';
 
 /**
  * You the developer, must declare 2 objects in order for the IntuitNestModule to function properly.
@@ -54,7 +58,7 @@ export const config: IntuitConfig = {
 /**
  * Persistance Service
  *
- * Implement these 4 async functions.
+ * Implement IntuitPersistence and write these 4 async functions.
  *
  * - async saveToken(token: OAuthToken)
  * - async getToken(): Promise<OAuthToken>
