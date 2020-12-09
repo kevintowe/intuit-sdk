@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 
 import { IntuitApiClientService } from '../api-client/intuit-api.service';
 import { IntuitPersistence, IntuitWebhookNotification } from '../types';
-import { databaseName, prepEntityName } from '../utils';
+import { databaseName } from '../utils';
 
 @Injectable()
 export class IntuitWebhookService {
@@ -45,14 +45,14 @@ export class IntuitWebhookService {
 
   private async create(notification: IntuitWebhookNotification) {
     await this.persistence.create<any>(
-      prepEntityName(databaseName(notification.name)),
+      databaseName(notification.name),
       await this.apiClient.read(notification.name, notification.id)
     );
   }
 
   private async update(notification: IntuitWebhookNotification) {
     await this.persistence.update<any>(
-      prepEntityName(databaseName(notification.name)),
+      databaseName(notification.name),
       await this.apiClient.read(notification.name, notification.id)
     );
   }
