@@ -2,14 +2,14 @@ import * as fs from 'fs';
 import { OAuthToken } from '@intuit-sdk/nest';
 
 export function getToken() {
-  const rawData = fs.readFileSync('./oauthToken.json');
-  const oauthToken = JSON.parse(rawData.toString()) as OAuthToken;
-  console.log(oauthToken);
-  if (oauthToken) {
-    console.log(oauthToken);
-    return oauthToken;
-  } else {
-    console.log('hmmmm did not work');
+  try {
+    if (fs.existsSync('./oauthToken.json')) {
+      const rawData = fs.readFileSync('./oauthToken.json');
+      const oauthToken = JSON.parse(rawData.toString()) as OAuthToken;
+      return oauthToken;
+    }
+  } catch (err) {
+    return null;
   }
 }
 

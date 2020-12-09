@@ -30,9 +30,6 @@
       "tags": [],
       "implicitDependencies": ["gui"]
     },
-    "nestjs": {
-      "tags": []
-    },
     "database-server": {
       "tags": []
     },

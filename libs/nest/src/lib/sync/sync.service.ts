@@ -1,38 +1,25 @@
 import { Inject, Injectable } from '@nestjs/common';
-import * as admin from 'firebase-admin';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { IntuitApiClientService } from '../api-client/intuit-api.service';
 
-import { PluralEntities, SingularEntities, EntitySyncReport } from '../types';
-import { prepEntityName } from '../utils';
+import { IntuitEntity, IntuitPersistence, IntuitSyncReport } from '../types';
+import { databaseName } from '../utils';
 
 @Injectable()
 export class IntuitSyncService {
   constructor(
-    @Inject('Firestore') private firestore: admin.firestore.Firestore,
-    @Inject('IntuitApiClient') private apiClient: any
+    @Inject('IntuitPersistence') private intuitPersistance: IntuitPersistence,
+    private apiClient: IntuitApiClientService
   ) {}
 
-  syncEntity(
-    entityPlural: PluralEntities,
-    entitySingular: SingularEntities
-  ): Observable<EntitySyncReport> {
-    let limit = 100;
+  syncEntity(entity: IntuitEntity): Observable<IntuitSyncReport> {
+    const limit = 100;
     let offset = 0;
     let status: 'active' | 'last' | 'done' = 'active';
-    const lowerCaseEntityName = prepEntityName(entityPlural);
-    const stats = {
-      entityName: entitySingular,
-      entityCount: 0,
-      pass: () => {
-        return (stats.passCount = stats.passCount + 1);
-      },
-      passCount: 0,
-      self() {
-        return {};
-      },
-    };
+    const dbReadyName = databaseName(entity);
 
-    const source = new BehaviorSubject<EntitySyncReport>({
+    const source = new BehaviorSubject<IntuitSyncReport>({
+      success: null,
       name: null,
       count: 0,
       pass: 0,
@@ -40,26 +27,19 @@ export class IntuitSyncService {
 
     new Promise(async (resolve, reject) => {
       while (status !== 'done') {
-        const entities = await this.queryQuickbooksEntity(
-          entityPlural,
-          entitySingular,
-          offset,
-          limit
-        );
+        const entities = await this.apiClient.query(entity, offset, limit);
 
         if (!entities) {
           resolve(null);
           return;
         }
 
-        entities.forEach(async (entity) => {
+        entities.forEach(async (item) => {
           try {
-            await this.firestore
-              .collection(lowerCaseEntityName)
-              .doc(entity.Id)
-              .set(entity);
+            await this.intuitPersistance.create(dbReadyName, item);
 
             source.next({
+              success: null,
               name: source.value.name,
               count: source.value.count + 1,
               pass: source.value.pass + 1,
@@ -72,28 +52,10 @@ export class IntuitSyncService {
         }
         offset = offset + limit;
       }
-    }).then((status) => {
+    }).then(() => {
       source.complete();
     });
 
     return source.asObservable().pipe();
-  }
-
-  private async queryQuickbooksEntity(
-    entityPlural: PluralEntities,
-    entitySingular: SingularEntities,
-    offset: number,
-    limit: number
-  ) {
-    return new Promise<any[]>((resolve, reject) => {
-      return this.apiClient[`find${entityPlural}`](
-        { offset, limit },
-        (err, data) => {
-          if (err) reject(err);
-          const entities = data.QueryResponse[entitySingular];
-          resolve(entities);
-        }
-      );
-    });
   }
 }

@@ -20,6 +20,7 @@ const config: IntuitConfig = {
   redirectUri: environment.redirectUri,
   environment: 'sandbox',
   frontEndRedirectUri: 'https://google.com',
+  syncModule: true,
 };
 
 @Injectable()

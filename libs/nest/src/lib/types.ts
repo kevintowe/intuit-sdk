@@ -7,7 +7,8 @@ export interface IntuitConfig {
   environment: 'sandbox' | 'production';
   redirectUri: string;
   frontEndRedirectUri: string;
-  verifierToken: string; // webhook
+  verifierToken: string; // webhook,
+  syncModule: boolean;
 }
 
 export interface IntuitPersistence {
@@ -84,3 +85,42 @@ export type WebhookEntities =
 /**
  * Intuit Api
  */
+export type IntuitEntity =
+  | 'Account'
+  | 'Bill'
+  | 'BillPayment'
+  | 'Budget'
+  | 'Class'
+  | 'CreditMemo'
+  | 'Currency'
+  | 'Customer'
+  | 'Department'
+  | 'Deposit'
+  | 'Employee'
+  | 'Estimate'
+  | 'Invoice'
+  | 'Item'
+  | 'JournalCode'
+  | 'JournalEntry'
+  | 'Payment'
+  | 'PaymentMethod'
+  | 'Preferences'
+  | 'Purchase'
+  | 'PurchaseOrder'
+  | 'RefundReceipt'
+  | 'SalesReceipt'
+  | 'TaxAgency'
+  | 'Term'
+  | 'TimeActivity'
+  | 'Transfer'
+  | 'Vendor'
+  | 'VendorCredit';
+/**
+ * Sync
+ */
+export interface IntuitSyncReport {
+  success: boolean;
+  name: string;
+  count: number;
+  pass: number;
+}

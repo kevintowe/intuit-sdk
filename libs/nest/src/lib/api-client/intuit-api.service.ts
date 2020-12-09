@@ -1,4 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
+import { IntuitEntity } from '../types';
+import { IntuitEntityPluralMap } from '../utils';
 
 @Injectable()
 export class IntuitApiClientService {
@@ -48,7 +50,17 @@ export class IntuitApiClientService {
 
   async delete() {}
 
-  async query() {}
+  async query(entity: IntuitEntity, offset: number, limit: number) {
+    return new Promise<any[]>((resolve, reject) => {
+      return this.nodeQuickbooks[`find${IntuitEntityPluralMap[entity]}`](
+        { offset, limit },
+        (err, data) => {
+          if (err) reject(err);
+          else resolve(data.QueryResponse[entity]);
+        }
+      );
+    });
+  }
 
   async reports() {}
 }

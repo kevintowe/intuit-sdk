@@ -1,6 +1,6 @@
 import { Controller, Get, Res } from '@nestjs/common';
 import { Response } from 'express';
-import { finalize, map } from 'rxjs/operators';
+import { finalize } from 'rxjs/operators';
 
 import { IntuitSyncService } from './sync.service';
 
@@ -11,7 +11,7 @@ export class IntuitSyncController {
   @Get('invoices')
   invoices(@Res() res: Response) {
     const sub = this.syncService
-      .syncEntity('Invoices', 'Invoice')
+      .syncEntity('Invoice')
       .pipe(
         finalize(() => {
           res.status(200).send('Success');
@@ -23,7 +23,7 @@ export class IntuitSyncController {
   @Get('customers')
   customers(@Res() res: Response) {
     this.syncService
-      .syncEntity('Customers', 'Customer')
+      .syncEntity('Customer')
       .pipe(
         finalize(() => {
           res.status(200).send('Success');
@@ -35,7 +35,43 @@ export class IntuitSyncController {
   @Get('estimates')
   estimates(@Res() res: Response) {
     this.syncService
-      .syncEntity('Estimates', 'Estimate')
+      .syncEntity('Estimate')
+      .pipe(
+        finalize(() => {
+          res.status(200).send('Success');
+        })
+      )
+      .subscribe();
+  }
+
+  @Get('accounts')
+  accounts(@Res() res: Response) {
+    this.syncService
+      .syncEntity('Account')
+      .pipe(
+        finalize(() => {
+          res.status(200).send('Success');
+        })
+      )
+      .subscribe();
+  }
+
+  @Get('payments')
+  payments(@Res() res: Response) {
+    this.syncService
+      .syncEntity('Payment')
+      .pipe(
+        finalize(() => {
+          res.status(200).send('Success');
+        })
+      )
+      .subscribe();
+  }
+
+  @Get('bills')
+  bills(@Res() res: Response) {
+    this.syncService
+      .syncEntity('Bill')
       .pipe(
         finalize(() => {
           res.status(200).send('Success');

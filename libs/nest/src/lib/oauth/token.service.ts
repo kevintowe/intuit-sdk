@@ -18,15 +18,20 @@ export class IntuitTokenService {
    */
   async fetchToken() {
     console.log('About to fetch the token');
-    const token = await this.persistence.getToken();
+    try {
+      const token = await this.persistence.getToken();
+      console.log(token);
+      if (!token) return null;
 
-    if (!token) return null;
-
-    this.oauthClient.setToken(token);
-    console.log(`The Intuit OAuth Token is: ${this.(this.oauthClient.isAccessTokenValid())}`);
-
-    if (this.oauthClient.isAccessTokenValid()) return token;
-    else return this.refreshToken(token);
+      this.oauthClient.setToken(token);
+      console.log(
+        `The Intuit OAuth Token is: ${this.oauthClient.isAccessTokenValid()}`
+      );
+      if (this.oauthClient.isAccessTokenValid()) return token;
+      else return this.refreshToken(token);
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   /**

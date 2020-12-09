@@ -20,52 +20,62 @@ export function buildToken(authResponse: any) {
 /**
  * Accepts an entity name and makes the first character lowercase, for database references.
  */
-export function prepEntityName(entity: string) {
+export function lowerCaseEntityName(entity: string) {
   let firstChar = entity.charAt(0);
   firstChar = firstChar.toLowerCase();
   return firstChar + entity.substr(1);
 }
 
 /**
- * Returns the correct database path from an uppercase entity name that's already in the singular
+ * Accepts an entity name, in the singular, and returns the database
+ * ready name. aka `Customer` -> `customers`
  */
 export function databaseName(entity: string) {
-  return DatabaseNamesMap[entity];
+  return lowerCaseEntityName(IntuitEntityPluralMap[entity]);
 }
 
-const DatabaseNamesMap = {
-  Account: 'accounts',
-  Attachable: 'attachables',
-  Bill: 'bills',
-  BillPayment: 'billPayments',
-  Budget: 'budgets',
-  Class: 'classes',
-  CompanyInfo: 'companyInfo',
-  CreditMemo: 'creditMemos',
-  Customer: 'customers',
-  Department: 'departments',
-  Deposit: 'deposits',
-  Employee: 'employees',
-  Estimate: 'estimates',
-  ExchangeRate: 'exchangeRates',
-  Invoice: 'invoices',
-  Item: 'items',
-  JournalCode: 'journalCodes',
-  JournalEntry: 'journalEntries',
-  Payment: 'payments',
-  PaymentMethod: 'paymentMethods',
-  Preferences: 'preferences',
-  Purchase: 'purchases',
-  PurchaseOrder: 'purchaseOrders',
-  RefundReceipt: 'refundReceipts',
-  Reports: 'reports',
-  SalesReceipt: 'salesReceipts',
-  TaxAgency: 'taxAgency',
-  TaxCode: 'taxCodes',
-  TaxRate: 'taxRates',
-  Term: 'terms',
-  TimeActivity: 'timeActivities',
-  Vendor: 'vendors',
-  VendorCredit: 'vendorCredits',
-  ExchangeRates: 'exchangeRates',
+export const IntuitEntityPluralMap = {
+  Account: 'Accounts',
+  Bill: 'Bills',
+  Customer: 'Customers',
+  Estimate: 'Estimates',
+  Invoice: 'Invoices',
+  Payment: 'Payments',
 };
+
+// const DatabaseNamesMap = {
+//   Account: 'accounts',
+//   Attachable: 'attachables',
+//   Bill: 'bills',
+//   BillPayment: 'billPayments',
+//   Budget: 'budgets',
+//   Class: 'classes',
+//   CompanyInfo: 'companyInfo',
+//   CreditMemo: 'creditMemos',
+//   Customer: 'customers',
+//   Department: 'departments',
+//   Deposit: 'deposits',
+//   Employee: 'employees',
+//   Estimate: 'estimates',
+//   ExchangeRate: 'exchangeRates',
+//   Invoice: 'invoices',
+//   Item: 'items',
+//   JournalCode: 'journalCodes',
+//   JournalEntry: 'journalEntries',
+//   Payment: 'payments',
+//   PaymentMethod: 'paymentMethods',
+//   Preferences: 'preferences',
+//   Purchase: 'purchases',
+//   PurchaseOrder: 'purchaseOrders',
+//   RefundReceipt: 'refundReceipts',
+//   Reports: 'reports',
+//   SalesReceipt: 'salesReceipts',
+//   TaxAgency: 'taxAgency',
+//   TaxCode: 'taxCodes',
+//   TaxRate: 'taxRates',
+//   Term: 'terms',
+//   TimeActivity: 'timeActivities',
+//   Vendor: 'vendors',
+//   VendorCredit: 'vendorCredits',
+//   ExchangeRates: 'exchangeRates',
+// };

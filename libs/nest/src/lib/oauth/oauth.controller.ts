@@ -10,13 +10,15 @@ export class IntuitOAuthController {
   constructor(
     @Inject('IntuitOAuthClient') private oauthClient: any,
     @Inject('IntuitPersistence') private intuitPersistence: IntuitPersistence,
-    @Inject('IntuitConfig') private config: IntuitConfig // @Inject('NodeQuickbooks') private nodeQuickbooks: any
+    @Inject('IntuitConfig') private config: IntuitConfig,
+    @Inject('NodeQuickbooks') private nodeQuickbooks: any
   ) {}
 
   @Get('authorize')
   authorize(@Res() res: Response) {
     const authUri = this.oauthClient.authorizeUri({
       scope: [OAuthClient.scopes.Accounting],
+      state: null,
     });
     res.redirect(authUri);
   }
@@ -33,9 +35,9 @@ export class IntuitOAuthController {
         .then(async (authResponse: any) => {
           const token = buildToken(authResponse);
 
-          // this.nodeQuickbooks.token = token.access_token;
-          // this.nodeQuickbooks.realmId = token.realmId;
-          // this.nodeQuickbooks.refreshToken = token.refresh_token;
+          this.nodeQuickbooks.token = token.access_token;
+          this.nodeQuickbooks.realmId = token.realmId;
+          this.nodeQuickbooks.refreshToken = token.refresh_token;
           try {
             await this.intuitPersistence.saveToken(token);
             res.redirect(this.config.frontEndRedirectUri);
