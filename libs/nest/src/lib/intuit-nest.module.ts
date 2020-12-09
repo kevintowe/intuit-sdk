@@ -16,12 +16,13 @@ import { IntuitSyncController } from './sync/sync.controller';
 import { IntuitSyncService } from './sync/sync.service';
 // Utils
 import { IntuitConfig, IntuitPersistence } from './types';
+import { IntuitOAuthClient, NodeQuickbooksClient } from './tokens';
 
 /**
  * Intuit OAuth Provider
  */
 const intuitOAuthProvider: Provider = {
-  provide: 'IntuitOAuthClient',
+  provide: IntuitOAuthClient,
   useFactory: (config: IntuitConfig) => {
     return new OAuthClient({
       clientId: config.clientId,
@@ -36,7 +37,7 @@ const intuitOAuthProvider: Provider = {
  * Node Quickbooks Provider
  */
 const nodeQuickbooksProvider: Provider = {
-  provide: 'NodeQuickbooks',
+  provide: NodeQuickbooksClient,
   useFactory: async (
     tokenService: IntuitTokenService,
     config: IntuitConfig

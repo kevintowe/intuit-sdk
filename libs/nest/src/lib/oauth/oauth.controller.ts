@@ -4,14 +4,15 @@ const OAuthClient = require('intuit-oauth');
 
 import { IntuitConfig, IntuitPersistence } from '../types';
 import { buildToken } from '../utils';
+import { IntuitOAuthClient, NodeQuickbooksClient } from '../tokens';
 
 @Controller('intuit/oauth')
 export class IntuitOAuthController {
   constructor(
-    @Inject('IntuitOAuthClient') private oauthClient: any,
+    @Inject(IntuitOAuthClient) private oauthClient: any,
     @Inject('IntuitPersistence') private intuitPersistence: IntuitPersistence,
     @Inject('IntuitConfig') private config: IntuitConfig,
-    @Inject('NodeQuickbooks') private nodeQuickbooks: any
+    @Inject(NodeQuickbooksClient) private nodeQuickbooks: any
   ) {}
 
   @Get('authorize')

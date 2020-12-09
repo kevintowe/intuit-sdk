@@ -1,10 +1,11 @@
 import { Inject, Injectable } from '@nestjs/common';
+import { NodeQuickbooksClient } from '../tokens';
 import { IntuitEntity } from '../types';
 import { IntuitEntityPluralMap } from '../utils';
 
 @Injectable()
 export class IntuitApiClientService {
-  constructor(@Inject('NodeQuickbooks') private nodeQuickbooks: any) {}
+  constructor(@Inject(NodeQuickbooksClient) private nodeQuickbooks: any) {}
 
   async read(entity: string, id: string) {
     return new Promise((resolve, reject) => {

@@ -2,6 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 
 import { IntuitPersistence, OAuthToken } from '../types';
 import { buildToken } from '../utils';
+import { IntuitOAuthClient } from '../tokens';
 
 @Injectable()
 export class TestService {}
@@ -10,7 +11,7 @@ export class TestService {}
 export class IntuitTokenService {
   constructor(
     @Inject('IntuitPersistence') private persistence: IntuitPersistence,
-    @Inject('IntuitOAuthClient') private oauthClient: any
+    @Inject(IntuitOAuthClient) private oauthClient: any
   ) {}
 
   /**
