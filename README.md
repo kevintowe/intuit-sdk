@@ -110,3 +110,10 @@ export class IntuitPersistenceService implements IntuitPersistence {
 })
 export class AppModule {}
 ```
+
+## TODO
+
+- Ensure the oauth redirect is coming from intuit
+- OAuth scope should be configurable, either via the module import and/or per request.
+- Dependencies of the IntuitPersitance service can be passed in with the IntuitNestModule import, instead of requiring those dependencies be declared in a global module
+- Sync operations send back a SyncReport, indicating how many entities were synced and if there were any failures or errors.
