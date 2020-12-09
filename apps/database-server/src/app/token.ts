@@ -1,13 +1,16 @@
 import * as fs from 'fs';
 import { OAuthToken } from '@intuit-sdk/nest';
 
-const tokenPath =
-  __dirname + '/apps/database-server/src/assets/oauthToken.json';
-
 export function getToken() {
-  const rawData = fs.readFileSync(tokenPath);
+  const rawData = fs.readFileSync('./oauthToken.json');
   const oauthToken = JSON.parse(rawData.toString()) as OAuthToken;
-  return oauthToken;
+  console.log(oauthToken);
+  if (oauthToken) {
+    console.log(oauthToken);
+    return oauthToken;
+  } else {
+    console.log('hmmmm did not work');
+  }
 }
 
 export async function saveToken(token: OAuthToken) {
@@ -16,7 +19,7 @@ export async function saveToken(token: OAuthToken) {
   console.log(data);
   return new Promise((resolve, reject) => {
     try {
-      fs.writeFileSync(tokenPath, data);
+      fs.writeFileSync('./oauthToken.json', data);
       resolve(null);
     } catch (err) {
       reject(err);

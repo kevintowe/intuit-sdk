@@ -17,12 +17,15 @@ export class IntuitTokenService {
    * verifies token validity and refreshes if necessary
    */
   async fetchToken() {
+    console.log('About to fetch the token');
     const token = await this.persistence.getToken();
 
     if (!token) return null;
-    console.log(`The Intuit OAuth Token is: ${this.isValidToken(token)}`);
 
-    if (this.isValidToken(token)) return token;
+    this.oauthClient.setToken(token);
+    console.log(`The Intuit OAuth Token is: ${this.(this.oauthClient.isAccessTokenValid())}`);
+
+    if (this.oauthClient.isAccessTokenValid()) return token;
     else return this.refreshToken(token);
   }
 
@@ -43,13 +46,5 @@ export class IntuitTokenService {
           console.log(err);
         }
       }) as OAuthToken;
-  }
-
-  /**
-   * TODO, let the intuit oauth library handle this
-   */
-  private isValidToken(token: OAuthToken) {
-    const expiration = token.createdAt + token.expires_in * 1000;
-    return expiration > Date.now() ? true : false;
   }
 }

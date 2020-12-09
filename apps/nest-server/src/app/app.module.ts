@@ -56,8 +56,29 @@ class IntuitPersistenceService implements IntuitPersistence {
       console.log('Request Ended');
     });
   }
+
   async getToken() {
-    return {} as OAuthToken;
+    return new Promise<OAuthToken>((resolve, reject) => {
+      const options: http.RequestOptions = {
+        host: this.host,
+        port: this.port,
+        path: '/oauth-token',
+        method: 'GET',
+      };
+
+      const req = http.request(options, (response) => {
+        response.on('data', (d) => {
+          resolve(JSON.parse(d.toString()));
+        });
+      });
+
+      req.on('error', (error) => {
+        console.log(error);
+        reject(error);
+      });
+
+      req.end(() => {});
+    });
   }
   async create<T>(entityName: string, entity: T) {}
   async update<T>(entityName: string, entity: T) {}
